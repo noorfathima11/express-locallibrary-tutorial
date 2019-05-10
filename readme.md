@@ -25,15 +25,17 @@ Since we do not know all the options up-front and they might change
 Here we choose book-genre(e.g. Science Fiction, French Poetry, etc.) for the model - the values of this model can be created dynamically.
 We will not to have a model for the BookInstance:status — we will hard code the acceptable values because we don't expect these to change.
 
+--------------------
 
-
-
-
+Defining the Local Library Schema:
+- Has separate module for each model. (eg. /models/author.js)
 
 --------------------
 
 Mini challenge:
 Create a new route in /routes/users.js that will display the text "You're so cool" at URL /users/cool/. Test it by running the server and visiting http://localhost:3000/users/cool/
+
+Route: The route defines a callback that will be invoked whenever an HTTP GET request with the correct pattern is detected.
 
 Steps:
 1) Here the aim is to create a route (/users/cool)

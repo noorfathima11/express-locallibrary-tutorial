@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('I am looking');
+  res.end('There are currently no users');
 });
 
 /* mini challenge route
