@@ -32,6 +32,32 @@ Defining the Local Library Schema:
 
 --------------------
 
+Routes and controllers:
+
+Brief:
+- The code to present the information stored in the db to users
+- First determine what information we want to be able to display in our pages
+- Define appropriate URLs for returning those resources
+- Then create the routes (URL Handlers) and views (templates) to display those pages.
+- Controller functions to separate out the code to route requests from the code that actually processes the requests
+
+Models are already defined, here we need to create:
+1) Routes : To forward the supported requests (also any information encoded in request URLs) to appropriate controller functions
+2) Controller functions: To get the requested data from the models, create an HTML page displaying that data and return it to the user to view in the browser
+3) Views(templates) used by the controllers to render the data
+
+Routes needed for this website:
+1) catalog/ - The home/index page
+2) catalog/<object> - The list of all books, bookinstances, genres and authors (e.g /catalogs/books/, /catalogs/genres/)
+3) catalog/<object>/<id> - The detail page for a specific book, bookinstance, genre or author with the given _id (eg /catalog/book/1234)
+4) catalog/<object>/create - The form to create a new book, bookinstance, genre or author (eg /catalog/book/create)
+5) catalog/<object>/<id>/update - The form to update a specific book, bookinstance, genre or author with the given _id field value (eg /catalog/book/1234/update)
+6) catalog/<object>/<id>/delete - The form to update a specific book, bookinstance, genre or author with the given _id field value (eg /catalog/book/1234/delete)
+
+--------------------
+
+
+
 Mini challenge:
 Create a new route in /routes/users.js that will display the text "You're so cool" at URL /users/cool/. Test it by running the server and visiting http://localhost:3000/users/cool/
 
