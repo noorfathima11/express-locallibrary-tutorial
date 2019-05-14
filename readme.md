@@ -56,6 +56,40 @@ Routes needed for this website:
 
 --------------------
 
+Displaying library data:
+
+Gist:
+- Display the library books and other data
+- Homepage : shows how many records we have of each model type
+- List page
+- Detail page
+
+Library website base template:
+
+- Will have a sidebar with links for the different pages
+- Main content area that we'll override in each of our individual pages
+
+Individual Pages:
+
+- Home page:
+  * Accessible from either the site('/') or catalog('/catalog') root.
+  * Displays some static text describing the site along with dynamically calculated "counts" of different record types in the database
+
+   Dynamically calculating the "counts":
+   * The controller function (/controllers/book-controller.js) fetches the information about how many - book
+        - bookInstance
+        - available 'bookInstance'
+        - author
+        - genre
+    records we have in the database.
+    * It needs to render this data in a template to create in HTML page
+    * It needs to return this in an HTTP response
+
+    * countDocuments() method is used to get the number of instances of each model. This is called on a model. 
+
+
+_____________________
+
 
 
 Mini challenge:
