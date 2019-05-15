@@ -1,12 +1,20 @@
-var Genre = require('../models/genre')
+const genre = require('../models/genre')
+const book = require('../models/book')
+const async = require('async')
 
 // Display list of all Genre.
 exports.genreList = function(req, res) {
-    res.send('NOT IMPLEMENTED: Genre list')
+    genre.find()
+    .sort([['name', 'ascending']])
+    .exec(function (err, listGenres){
+        if(err) {return next(err)}
+        res.render('genre-list', {title: 'Genre List', genreList: listGenres})
+    })
+
 }
 
 // Display detail page for a specific Genre.
-exports.genreDetail = function(req, res) {
+exports.genreDetail = function(req, res, next) {
     res.send('NOT IMPLEMENTED: Genre detail: ' + req.params.id)
 }
 

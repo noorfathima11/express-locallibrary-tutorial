@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 // Require controller modules
-const bookController = require('../controllers/book-contoller')
+const bookController = require('../controllers/book-controller')
 const authorController =  require('../controllers/author-controller')
 const genreController = require('../controllers/genre-controller')
 const bookInstanceController = require('../controllers/bookInstance-controller')

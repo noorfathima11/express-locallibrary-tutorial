@@ -76,7 +76,8 @@ Individual Pages:
   * Displays some static text describing the site along with dynamically calculated "counts" of different record types in the database
 
    Dynamically calculating the "counts":
-   * The controller function (/controllers/book-controller.js) fetches the information about how many - book
+   * The controller function (/controllers/book-controller.js) fetches the information about how many
+        - book
         - bookInstance
         - available 'bookInstance'
         - author
@@ -85,12 +86,10 @@ Individual Pages:
     * It needs to render this data in a template to create in HTML page
     * It needs to return this in an HTTP response
 
-    * countDocuments() method is used to get the number of instances of each model. This is called on a model. 
+    * countDocuments() method is used to get the number of instances of each model. This is called on a model.
 
 
 _____________________
-
-
 
 Mini challenge:
 Create a new route in /routes/users.js that will display the text "You're so cool" at URL /users/cool/. Test it by running the server and visiting http://localhost:3000/users/cool/
