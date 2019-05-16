@@ -12,8 +12,18 @@ exports.bookInstanceList = function(req, res) {
 }
 
 // Display detail page for a specific bookInstance.
-exports.bookInstanceDetail = function(req, res) {
-    res.send('NOT IMPLEMENTED: bookInstance detail: ' + req.params.id)
+exports.bookInstanceDetail = function(req, res, next) {
+    bookInstance.findById(req.params.id)
+    .populate('Book')
+    .exec(function (err, bookInstance) {
+        if(err) {return next(err)}
+        if(bookInstance==null){
+            const err = new Error('Book copy not found')
+            err.status = 404
+            return next(err)
+        }
+        res.render('bookInstance-detail', {title: 'Book:', bookInstance: bookInstance })
+    })
 }
 
 // Display bookInstance create form on GET.

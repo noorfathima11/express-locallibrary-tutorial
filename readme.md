@@ -88,8 +88,42 @@ Individual Pages:
 
     * countDocuments() method is used to get the number of instances of each model. This is called on a model.
 
+List pages:
+
+- Book-list page
+
+- BookInstance-list page
+
+- Author-list page
+
+- Genre-list page
+
+Detail pages:
+
+- Genre-detail page
+  * Displays the information of the particular genre instance using it's automatically generated _id field value as the identifier.
+  * The page displays genre name, list of all books in the genre with links to each book's detail page
+  * async.parallel() has been used to query the genre name and it's associated books in parallel, with the callback rendering the page when both requests complete successfully.
+  * The id of the genre record is encoded at the end of the URL and extracted automatically based on the route definition (/genre/:id)
+  * The id is accessed within the controller via the request parameters: req.params.id.
+  * This id is used in genre.findById() to get the current genre.
+  * It is also used to get all book objects that have the genre ID in their genre field : book.find({genre : req.params.id})
+
+- Book-detail page
+  * Displays information for a specific book identified using it's _id field value, along with information about each associated copy in the library(BookInstance)
+  * Wherever we display the author, genre or book instance, these should be linked to the associated detail page for that item
+
+
+- Author-detail page
+  * Displays information about the specified author, identified using their _id field value, along with a list of all the book ojects associated with that author
+
+- BookInstance-detail page
+  * Needs to display information for each bookInstance, identified using it's _id field value.
+  * This will include book name along with other information in the record. 
 
 _____________________
+
+
 
 Mini challenge:
 Create a new route in /routes/users.js that will display the text "You're so cool" at URL /users/cool/. Test it by running the server and visiting http://localhost:3000/users/cool/

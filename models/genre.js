@@ -10,7 +10,7 @@ const genreSchema = new Schema({
 genreSchema
 .virtual('url')
 .get(function(){
-    return '/catalog/genre' + this._id
+    return '/catalog/genre/' + this._id
 })
 
-module.exports = mongoose.model('genre', genreSchema)
+module.exports = mongoose.model('Genre', genreSchema)
