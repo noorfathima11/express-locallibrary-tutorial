@@ -22,13 +22,13 @@ router.post('/book/create', bookController.bookCreatePost)
 router.get('book/:id/delete', bookController.bookDeleteGet)
 
 // POST request to delete book
-router.post('/book/_id/delete', bookController.bookDeletePost)
+router.post('/book/:id/delete', bookController.bookDeletePost)
 
 // GET request to update book
-router.get('/book/update', bookController.bookUpdateGet)
+router.get('/book/:id/update', bookController.bookUpdateGet)
 
 // POST request to update book
-router.post('/book/update', bookController.bookUpdatePost)
+router.post('/book/:id/update', bookController.bookUpdatePost)
 
 // GET request for one book
 router.get('/book/:id', bookController.bookDetail)

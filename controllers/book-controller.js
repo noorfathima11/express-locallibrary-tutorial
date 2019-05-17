@@ -25,12 +25,12 @@ exports.index = function(req, res){
             genre.countDocuments({}, callback)
         }
     }, function(err, results) {
-        res.render('index', { title: 'Local Library Home', error: err, data: results })
+        res.render('index', { title: 'GEEKSKOOL Mini Library Homepage', error: err, data: results })
     })
 }
 
 // Display list of all books.
-exports.bookList = function(req, res) {
+exports.bookList = function(req, res, next) {
     book.find({}, 'title author')
     .populate('author')
     .exec(function(err, listBooks){
@@ -70,16 +70,16 @@ exports.bookDetail = function(req, res, next) {
 exports.bookCreateGet = function(req, res, next) {
     // Get all authors and genres which we can use to adding to our book
     async.parallel({
-        authors : function(callback){
+        getAuthor : function(callback){
             author.find(callback)
         },
-        genres : function(callback){
+        getGenres : function(callback){
             genre.find(callback)
         }
     },
         function (err, results) {
             if(err) { return next(err)}
-            res.render('book-form', {title: 'Create Book', authors: results.authors, genres: results.genres})
+            res.render('book-form', {title: 'Create Book', getAuthor: results.getAuthor, getGenres: results.getGenres})
     })
 }
 
@@ -177,7 +177,7 @@ exports.bookUpdateGet = function(req, res) {
         getAuthor : function(callback){
             author.find(callback)
         },
-        getGenres : function(callback){
+        getGenre : function(callback){
             genre.find(callback)
         }
     }, function(err, results){
@@ -188,12 +188,87 @@ exports.bookUpdateGet = function(req, res) {
             return next(err)
         }
         //Success, Mark our selected genres as checked
+        for(let all_g_iter = 0; all_g_iter < results.getGenre.length; all_g_iter++){
+            for(let book_g_iter = 0; book_g_iter < results.getBook.genre; book_g_iter++){
+                if(results.getGenre[all_g_iter]._id.toString===results.getBook[book_g_iter]._id.toString()){
+                    results.getGenre[all_g_iter].checked='true'
+                }
+            }
+        } res.render('book-form', {title: 'Update book', getAuthor : results.getAuthor, getGenres: results.getGenre, getBook: results.getBook})
     }
     )
 }
 
 // Handle book update on POST.
-exports.bookUpdatePost = function(req, res) {
-    res.send('NOT IMPLEMENTED: Book update POST')
-}
+exports.bookUpdatePost = [
+    //convert the genre to an array
+    (req, res, next) => {
+        if(!(req.body.genre instanceof Array)){
+            if(typeof req.body.genre==='undefined') req.body.genre = []
+            else req.body.genre = new Array(req.body.genre)
+        }
+        next()
+    },
+    // Validate fields.
+    body('title', 'Title must not be empty.').isLength({ min: 1 }).trim(),
+    body('author', 'Author must not be empty.').isLength({ min: 1 }).trim(),
+    body('summary', 'Summary must not be empty.').isLength({ min: 1 }).trim(),
+    body('isbn', 'ISBN must not be empty').isLength({ min: 1 }).trim(),
 
+    // Sanitize fields.
+    sanitizeBody('title').escape(),
+    sanitizeBody('author').escape(),
+    sanitizeBody('summary').escape(),
+    sanitizeBody('isbn').escape(),
+    sanitizeBody('genre.*').escape(),
+
+    // Process request after validation and sanitization.
+    (req, res, next) => {
+
+        // Extract the validation errors from a request.
+        const errors = validationResult(req)
+
+        // Create a Book object with escaped/trimmed data and old id.
+        var Book = new book(
+          { title: req.body.title,
+            author: req.body.author,
+            summary: req.body.summary,
+            isbn: req.body.isbn,
+            genre: (typeof req.body.genre==='undefined') ? [] : req.body.genre,
+            _id:req.params.id //This is required, or a new ID will be assigned!
+           })
+
+        if (!errors.isEmpty()) {
+            // There are errors. Render form again with sanitized values/error messages.
+
+            // Get all authors and genres for form.
+            async.parallel({
+                getAuthor: function(callback) {
+                    author.find(callback)
+                },
+                getGenres: function(callback) {
+                    genre.find(callback)
+                },
+            }, function(err, results) {
+                if (err) { return next(err) }
+
+                // Mark our selected genres as checked.
+                for (let i = 0; i < results.getGenres.length; i++) {
+                    if (Book.genre.indexOf(results.getGenres[i]._id) > -1) {
+                        results.getGenres[i].checked='true';
+                    }
+                }
+                res.render('book_form', { title: 'Update Book', getAuthor: results.getAuthor, getGenres: results.getGenres, getBook: getBook, errors: errors.array() })
+            })
+            return
+        }
+        else {
+            // Data from form is valid. Update the record.
+            book.findByIdAndUpdate(req.params.id, Book, {}, function (err,thebook) {
+                if (err) { return next(err) }
+                   // Successful - redirect to book detail page.
+                   res.redirect(thebook.url)
+                })
+        }
+    }
+]

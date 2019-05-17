@@ -14,7 +14,8 @@ const app = express()
 //Set up mongoose connection
 const mongoose = require('mongoose')
 //const mongoDB = Mongo("localhost:3000/myDatabase")
-const mongoDB = 'mongodb+srv://noor:noOnebutme001@cluster0-mmtnb.gcp.mongodb.net/test?retryWrites=true'
+const devDBURL = 'mongodb+srv://noor:noOnebutme001@cluster0-mmtnb.gcp.mongodb.net/test?retryWrites=true'
+const mongoDB = process.env.MONGODB_URI || devDBURL 
 mongoose.connect(mongoDB, { useNewUrlParser: true })
 const db = mongoose.connection
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
