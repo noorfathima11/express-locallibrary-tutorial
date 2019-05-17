@@ -1,4 +1,7 @@
 const bookInstance = require('../models/bookInstance')
+const {body, validationResult} = require('express-validator/check')
+const { sanitizeBody} = require('express-validator/filter')
+const book = require('../models/book')
 
 // Display list of all bookInstances.
 exports.bookInstanceList = function(req, res) {
@@ -28,13 +31,57 @@ exports.bookInstanceDetail = function(req, res, next) {
 
 // Display bookInstance create form on GET.
 exports.bookInstanceCreateGet = function(req, res) {
-    res.send('NOT IMPLEMENTED: bookInstance create GET')
+    book.find({}, 'title')
+    .exec(function(err, books){
+        if(err) {return next(err)}
+        res.render('bookInstance-form', {title: 'Create Book Instance', bookList: books})
+    })
 }
 
 // Handle bookInstance create on POST.
-exports.bookInstanceCreatePost = function(req, res) {
-    res.send('NOT IMPLEMENTED: bookInstance create POST')
-}
+exports.bookInstanceCreatePost = [
+    //Validate fields
+    body('book', 'Book must be specified').isLength({ min: 1 }).trim(),
+    body('imprint', 'Imprint must be specified').isLength({ min: 1 }).trim(),
+    body('dueBack', 'Invalid date').optional({ checkFalsy: true }).isISO8601(),
+    
+    // Sanitize fields.
+    sanitizeBody('book').escape(),
+    sanitizeBody('imprint').escape(),
+    sanitizeBody('status').trim().escape(),
+    sanitizeBody('dueBack').toDate(),
+
+    //Process request after validation and sanitization
+    (req, res, next) => {
+        //Extract the validation errors from a request
+        const errors = validationResult(req)
+
+        //Create a bookInstance object with escaped and trimmed data
+        const BookInstance = new bookInstance(
+            {
+                book: req.body.book,
+                imprint: req.body.imprint,
+                status: req.body.status,
+                dueBack: req.body.dueBack
+            })
+
+        if(!errors.isEmpty()){
+            // There are errors. Render form again with sanitized values and error messages
+            book.find({}, title)
+            .exec(function (err, books){
+                if(err) return next(err)
+                res.render('bookInstance-form', {title : 'Create bookInstance', bookList: books, selectedBook: bookInstance.book._id, errors: errors.array(), bookinstance: BookInstance })
+            })
+            return
+        }
+        //data from form is valid
+        BookInstance.save(function(err){
+            if (err) return next(err)
+            res.redirect(BookInstance.url)
+        })
+
+    }
+]
 
 // Display bookInstance delete form on GET.
 exports.bookInstanceDeleteGet = function(req, res) {

@@ -119,11 +119,28 @@ Detail pages:
 
 - BookInstance-detail page
   * Needs to display information for each bookInstance, identified using it's _id field value.
-  * This will include book name along with other information in the record. 
+  * This will include book name along with other information in the record.
 
 _____________________
 
+Forms:
 
+Pattern in all create forms:
+- First run validators
+- Followed by sanitizers
+- Check for errors
+- Either re-render the form with error information or save the data
+
+Delete forms:
+- Only those objects that are not referenced by other objects are allowed to be deleted
+- The form confirms that there are no associated books before the author is deleted
+- If there are associated books then the form displays them and states that they must be deleted before the object is itself deleted
+
+Update forms:
+- Similar to creating a book
+- Here the form is populated in the GET route with values from the database
+
+_____________________
 
 Mini challenge:
 Create a new route in /routes/users.js that will display the text "You're so cool" at URL /users/cool/. Test it by running the server and visiting http://localhost:3000/users/cool/

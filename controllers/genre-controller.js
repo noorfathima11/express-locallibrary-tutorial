@@ -46,56 +46,48 @@ exports.genreCreateGet = function(req, res, next) {
 }
 
 // Handle Genre create on POST.
-exports.genre_create_post =  [
-   
-    // Validate that the name field is not empty.
-    body('name', 'Genre name required').isLength({ min: 1 }).trim(),
-    
-    // Sanitize (escape) the name field.
+exports.genreCreatePost =  [
+    //validate that the name of the field is not empty
+    body('name', 'Genre name required').isLength({min: 1}).trim(),
+
+    //Sanitize (escape the name field)
     sanitizeBody('name').escape(),
-  
-    // Process request after validation and sanitization.
+
+    //Process request after validation and sanitization
     (req, res, next) => {
-  
-      // Extract the validation errors from a request.
-      const errors = validationResult(req);
-  
-      // Create a genre object with escaped and trimmed data.
-      var genre = new Genre(
-        { name: req.body.name }
-      );
-  
-  
-      if (!errors.isEmpty()) {
-        // There are errors. Render the form again with sanitized values/error messages.
-        res.render('genre_form', { title: 'Create Genre', genre: genre, errors: errors.array()});
-        return;
-      }
-      else {
-        // Data from form is valid.
-        // Check if Genre with same name already exists.
-        Genre.findOne({ 'name': req.body.name })
-          .exec( function(err, found_genre) {
-             if (err) { return next(err); }
-  
-             if (found_genre) {
-               // Genre exists, redirect to its detail page.
-               res.redirect(found_genre.url);
-             }
-             else {
-  
-               genre.save(function (err) {
-                 if (err) { return next(err); }
-                 // Genre saved. Redirect to genre detail page.
-                 res.redirect(genre.url);
-               });
-  
-             }
-  
-           });
-      }
+
+        //Extract the validation errors from a request
+        const errors = validationResult(req)
+
+        //Create a genre object with escaped and trimmed data
+        const Genre = new genre(
+            {name : req.body.name}
+        )
+
+        if(!errors.isEmpty()){
+            //There are errors. Render again with sanitized values/error messages
+            res.render('genre-form', {title : 'create genre', genre : Genre, errors: errors.array()})
+            return
+        }
+        //Data from form is valid
+        // Check if genre with same name already exists
+        genre.findOne({'name' : req.body.name })
+        .exec(function(err, foundGenre){
+            if(err) {return next(err)}
+
+            if(foundGenre){
+            //Genre exists, redirect it to its detail page
+            res.redirect(foundGenre.url)
+            } else {
+                Genre.save(function(err){
+                    if(err) {return next(err)}
+                    // Genre saved, redirect to genre detail page
+                    res.redirect(Genre.url)
+                })
+            }
+        })
     }
-  ];
+]
 
 // Display Genre delete form on GET.
 exports.genreDeleteGet = function(req, res) {

@@ -16,10 +16,10 @@ router.get('/', bookController.index)
 router.get('/book/create', bookController.bookCreateGet)
 
 // POST request for creating a book
-router.get('/book/create', bookController.bookCreatePost)
+router.post('/book/create', bookController.bookCreatePost)
 
 // GET request to delete book
-router.get('book/:id/delte', bookController.bookDeleteGet)
+router.get('book/:id/delete', bookController.bookDeleteGet)
 
 // POST request to delete book
 router.post('/book/_id/delete', bookController.bookDeletePost)
