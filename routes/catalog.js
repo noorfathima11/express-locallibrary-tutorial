@@ -19,7 +19,7 @@ router.get('/book/create', bookController.bookCreateGet)
 router.post('/book/create', bookController.bookCreatePost)
 
 // GET request to delete book
-router.get('book/:id/delete', bookController.bookDeleteGet)
+router.get('/book/:id/delete', bookController.bookDeleteGet)
 
 // POST request to delete book
 router.post('/book/:id/delete', bookController.bookDeletePost)
